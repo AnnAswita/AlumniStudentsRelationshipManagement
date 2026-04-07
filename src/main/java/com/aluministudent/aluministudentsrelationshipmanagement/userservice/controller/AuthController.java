@@ -1,5 +1,7 @@
 package com.aluministudent.aluministudentsrelationshipmanagement.userservice.controller;
 
+import com.aluministudent.aluministudentsrelationshipmanagement.userservice.dto.LoginRequestDTO;
+import com.aluministudent.aluministudentsrelationshipmanagement.userservice.dto.LoginResponseDTO;
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +16,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email,
-                        @RequestParam String password) {
-        return service.login(email, password);
+    public LoginResponseDTO login(@RequestBody LoginRequestDTO request) {
+        return service.login(request);
     }
 }

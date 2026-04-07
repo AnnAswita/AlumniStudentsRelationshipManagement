@@ -23,9 +23,7 @@ public class UserService {
         this.encoder = encoder;
     }
 
-    // ---------------------------
     // REGISTER USER
-    // ---------------------------
     public UserResponseDTO register(UserRequestDTO request) {
         User user = UserMapper.toEntity(request);
 
@@ -36,18 +34,14 @@ public class UserService {
         return UserMapper.toDTO(saved);
     }
 
-    // ---------------------------
     // GET USER BY ID
-    // ---------------------------
     public UserResponseDTO getUser(Long id) {
         User user = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return UserMapper.toDTO(user);
     }
 
-    // ---------------------------
     // LOGIN USER
-    // ---------------------------
     public LoginResponseDTO login(LoginRequestDTO request) {
         User user = repo.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
