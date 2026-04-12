@@ -18,6 +18,10 @@ public class MentorshipController {
     public MentorshipResponseDTO request(@RequestBody MentorshipRequestDTO dto) {
         return service.request(dto);
     }
+    @PutMapping("/{id}/reject")
+    public MentorshipResponseDTO reject(@PathVariable Long id) {
+        return service.reject(id);
+    }
 
     @PutMapping("/{id}/accept")
     public MentorshipResponseDTO accept(@PathVariable Long id) {
@@ -27,5 +31,10 @@ public class MentorshipController {
     @PutMapping("/{id}/complete")
     public MentorshipResponseDTO complete(@PathVariable Long id) {
         return service.complete(id);
+    }
+
+    @PutMapping("/{id}/cancel")
+    public MentorshipResponseDTO cancel(@PathVariable Long id) {
+        return service.cancel(id);
     }
 }
