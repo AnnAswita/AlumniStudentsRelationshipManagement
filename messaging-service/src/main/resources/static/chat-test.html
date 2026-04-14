@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Messaging WebSocket Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.1.1/bundles/stomp.umd.min.js"></script>
+</head>
+<body>
+<h2>Messaging WebSocket Test</h2>
+
+<label>Conversation ID:</label>
+<input type="number" id="conversationId" value="1"><br><br>
+
+<label>Sender ID:</label>
+<input type="number" id="senderId" value="101"><br><br>
+
+<label>Receiver ID:</label>
+<input type="number" id="receiverId" value="201"><br><br>
+
+<label>Message:</label>
+<input type="text" id="content" value="Hello from WebSocket"><br><br>
+
+<button onclick="connect()">Connect</button>
+<button onclick="sendMessage()">Send Message</button>
+
+<h3>Received Messages</h3>
+<ul id="messages"></ul>
+
+<script>
+    let stompClient = null;
+
+    function connect() {
+        const socket = new SockJS('http://localhost:8081/chat');
+        stompClient = new StompJs.Client({
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000,
+            onConnect: () => {
+                console.log('Connected');
+                stompClient.subscribe('/topic/messages', (message) => {
+                    const msg = JSON.parse(message.body);
+                    const li = document.createElement('li');
+                    li.textContent =
+                        "Conversation " + msg.conversationId +
+                        " | Sender " + msg.senderId +
+                        " -> Receiver " + msg.receiverId +
+                        " | " + msg.content +
+                        " | " + msg.timestamp;
+                    document.getElementById('messages').appendChild(li);
+                });
+                alert('Connected to WebSocket');
+            },
+            onStompError: (frame) => {
+                console.error('Broker error', frame);
+            }
+        });
+        stompClient.activate();
+    }
+
+    function sendMessage() {
+        const payload = {
+            conversationId: parseInt(document.getElementById('conversationId').value),
+            senderId: parseInt(document.getElementById('senderId').value),
+            receiverId: parseInt(document.getElementById('receiverId').value),
+            content: document.getElementById('content').value
+        };
+
+        stompClient.publish({
+            destination: '/app/send',
+            body: JSON.stringify(payload)
+        });
+    }
+</script>
+</body>
+</html>

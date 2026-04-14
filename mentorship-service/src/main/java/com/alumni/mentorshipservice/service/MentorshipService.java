@@ -5,6 +5,7 @@ import com.alumni.mentorshipservice.domain.valueobject.MentorshipStatus;
 import com.alumni.mentorshipservice.dto.*;
 import com.alumni.mentorshipservice.repository.MentorshipRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 
@@ -12,11 +13,16 @@ import java.time.LocalDate;
 public class MentorshipService {
 
     private final MentorshipRepository repo;
+    private final RestTemplate restTemplate;
 
-    public MentorshipService(MentorshipRepository repo) {
+    public MentorshipService(MentorshipRepository repo, RestTemplate restTemplate) {
         this.repo = repo;
+        this.restTemplate = restTemplate;
     }
-
+    public UserDTO getUserFromUserService(Long userId) {
+        String url = "http://user-service/users/" + userId;
+        return restTemplate.getForObject(url, UserDTO.class);
+    }
     public MentorshipResponseDTO request(MentorshipRequestDTO dto) {
         Mentorship m = MentorshipMapper.toEntity(dto);
         m.setStatus(MentorshipStatus.REQUESTED);
