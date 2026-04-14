@@ -18,11 +18,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="service-registry" />
         <module name="user-service" />
+        <module name="api-aggregator" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-aggregator" options="-parameters" />
       <module name="mentorship-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />
       <module name="user-service" options="-parameters" />
