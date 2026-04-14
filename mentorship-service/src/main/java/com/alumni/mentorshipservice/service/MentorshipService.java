@@ -1,9 +1,12 @@
 package com.alumni.mentorshipservice.service;
 
+import com.alumni.mentorshipservice.config.RoleValidator;
 import com.alumni.mentorshipservice.domain.model.Mentorship;
 import com.alumni.mentorshipservice.domain.valueobject.MentorshipStatus;
 import com.alumni.mentorshipservice.dto.*;
 import com.alumni.mentorshipservice.repository.MentorshipRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,16 +17,35 @@ public class MentorshipService {
 
     private final MentorshipRepository repo;
     private final RestTemplate restTemplate;
+    private final RoleValidator roleValidator;
+    private final HttpServletRequest request;
 
-    public MentorshipService(MentorshipRepository repo, RestTemplate restTemplate) {
+    public MentorshipService(MentorshipRepository repo, RestTemplate restTemplate, RoleValidator roleValidator, HttpServletRequest request) {
         this.repo = repo;
         this.restTemplate = restTemplate;
+        this.roleValidator = roleValidator;
+        this.request = request;
     }
+    @CircuitBreaker(name = "userService", fallbackMethod = "fallbackUser")
+    public void validateUser(Long userId) {
+        String url = "http://USER-SERVICE/users/" + userId;
+        restTemplate.getForObject(url, Object.class);
+    }
+
+    public void fallbackUser(Long userId, Throwable ex) {
+        throw new RuntimeException("User Service unavailable. Try later.");
+    }
+
     public UserDTO getUserFromUserService(Long userId) {
         String url = "http://user-service/users/" + userId;
         return restTemplate.getForObject(url, UserDTO.class);
     }
     public MentorshipResponseDTO request(MentorshipRequestDTO dto) {
+        roleValidator.allowOnlyStudent(request);
+
+        validateUser(dto.getStudentId());
+        validateUser(dto.getAlumniId());
+
         Mentorship m = MentorshipMapper.toEntity(dto);
         m.setStatus(MentorshipStatus.REQUESTED);
         m.setRequestDate(LocalDate.now());
@@ -32,6 +54,8 @@ public class MentorshipService {
     }
 
     public MentorshipResponseDTO reject(Long id){
+        roleValidator.allowOnlyAlumni(request);
+
         Mentorship m = repo.findById(id).orElseThrow();
         if(m.getStatus() != MentorshipStatus.REQUESTED) {
             throw new RuntimeException("Invalid state transition: Cannot reject mentorship in state "+m.getStatus());
@@ -42,6 +66,7 @@ public class MentorshipService {
     }
 
     public MentorshipResponseDTO accept(Long id) {
+        roleValidator.allowOnlyAlumni(request);
         Mentorship m = repo.findById(id).orElseThrow();
 
         if (m.getStatus() != MentorshipStatus.REQUESTED) {

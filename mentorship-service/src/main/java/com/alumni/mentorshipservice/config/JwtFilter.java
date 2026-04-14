@@ -38,6 +38,8 @@ public class JwtFilter implements Filter {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+        String role = jwtUtil.extractRole(token);
+        request.setAttribute("role", role);
 
         chain.doFilter(request, response);
     }
