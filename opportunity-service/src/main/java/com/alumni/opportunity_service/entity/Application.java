@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Entity
 @Data
@@ -13,7 +13,7 @@ public class Application {
 
     @Id
     @GeneratedValue
-    private UUID applicationId;
+    private Long applicationId;
 
     private LocalDateTime appliedDate;
 

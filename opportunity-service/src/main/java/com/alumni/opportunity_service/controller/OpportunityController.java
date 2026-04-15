@@ -7,7 +7,7 @@ import com.alumni.opportunity_service.service.OpportunityService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/opportunities")
@@ -42,13 +42,13 @@ public class OpportunityController {
     }
 
     @GetMapping("/{id}")
-    public OpportunityResponseDTO getById(@PathVariable UUID id) {
+    public OpportunityResponseDTO getById(@PathVariable Long id) {
         return mapToDTO(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public OpportunityResponseDTO update(@PathVariable UUID id,
-                                         @RequestParam UUID userId,
+    public OpportunityResponseDTO update(@PathVariable Long id,
+                                         @RequestParam Long userId,
                                          @RequestBody OpportunityRequestDTO request) {
 
         Opportunity updated = new Opportunity();
@@ -63,7 +63,7 @@ public class OpportunityController {
     }
     
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 

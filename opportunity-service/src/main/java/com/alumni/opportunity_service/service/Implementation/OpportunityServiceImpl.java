@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.UUID;
+
 
 @Service
 public class OpportunityServiceImpl implements OpportunityService {
@@ -24,7 +24,7 @@ public class OpportunityServiceImpl implements OpportunityService {
     }
 
     @Override
-    public Opportunity create(Opportunity opportunity, UUID userId) {
+    public Opportunity create(Opportunity opportunity, Long userId) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
@@ -40,7 +40,7 @@ public class OpportunityServiceImpl implements OpportunityService {
     }
 
     @Override
-    public Opportunity update(UUID id, UUID userId, Opportunity updatedOpportunity) {
+    public Opportunity update(Long id, Long userId, Opportunity updatedOpportunity) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
@@ -61,7 +61,7 @@ public class OpportunityServiceImpl implements OpportunityService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 
@@ -71,7 +71,7 @@ public class OpportunityServiceImpl implements OpportunityService {
     }
 
     @Override
-    public Opportunity getById(UUID id) {
+    public Opportunity getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Opportunity not found"));
     }
