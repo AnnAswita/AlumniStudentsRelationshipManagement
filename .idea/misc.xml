@@ -6,10 +6,15 @@
       <list>
         <option value="$PROJECT_DIR$/mentorship-service/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/service-registry/pom.xml" />
+        <option value="$PROJECT_DIR$/api-aggregator/pom.xml" />
+        <option value="$PROJECT_DIR$/messaging-service/pom.xml" />
+        <option value="$PROJECT_DIR$/event-service/pom.xml" />
+        <option value="$PROJECT_DIR$/opportunity-service/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="21" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="temurin-21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
