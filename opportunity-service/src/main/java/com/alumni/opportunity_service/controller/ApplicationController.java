@@ -7,7 +7,7 @@ import com.alumni.opportunity_service.service.ApplicationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/applications")
@@ -31,7 +31,7 @@ public class ApplicationController {
     }
 
     @PutMapping("/{id}/status")
-    public ApplicationResponseDTO updateStatus(@PathVariable UUID id,
+    public ApplicationResponseDTO updateStatus(@PathVariable Long id,
                                                @RequestParam String status) {
 
         Application app = service.updateStatus(id, status);
@@ -39,7 +39,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/student/{studentId}")
-    public List<ApplicationResponseDTO> getByStudent(@PathVariable UUID studentId) {
+    public List<ApplicationResponseDTO> getByStudent(@PathVariable Long studentId) {
 
         return service.getByStudent(studentId)
                 .stream()
@@ -48,7 +48,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/opportunity/{opportunityId}")
-    public List<ApplicationResponseDTO> getByOpportunity(@PathVariable UUID opportunityId) {
+    public List<ApplicationResponseDTO> getByOpportunity(@PathVariable Long opportunityId) {
 
         return service.getByOpportunity(opportunityId)
                 .stream()

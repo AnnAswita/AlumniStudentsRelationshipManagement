@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Entity
 @Data
@@ -12,7 +12,7 @@ public class Opportunity {
 
     @Id
     @GeneratedValue
-    private UUID opportunityId;
+    private Long opportunityId;
 
     private String title;
     private String description;

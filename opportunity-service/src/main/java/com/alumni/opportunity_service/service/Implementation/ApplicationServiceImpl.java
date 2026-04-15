@@ -1,14 +1,14 @@
 package com.alumni.opportunity_service.service.Implementation;
 
+import com.alumni.opportunity_service.dto.UserDTO;
 import com.alumni.opportunity_service.entity.*;
 import com.alumni.opportunity_service.enums.ApplicationStatus;
 import com.alumni.opportunity_service.enums.UserRole;
 import com.alumni.opportunity_service.repository.*;
 import com.alumni.opportunity_service.service.ApplicationService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.client.RestTemplate;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -16,17 +16,20 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository repository;
     private final UserRepository userRepository;
     private final OpportunityRepository opportunityRepository;
+    private final RestTemplate restTemplate;
 
     public ApplicationServiceImpl(ApplicationRepository repository,
                                   UserRepository userRepository,
-                                  OpportunityRepository opportunityRepository) {
+                                  OpportunityRepository opportunityRepository,
+                                  RestTemplate restTemplate) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.opportunityRepository = opportunityRepository;
+        this.restTemplate = restTemplate;
     }
 
     @Override
-    public Application apply(UUID studentId, UUID opportunityId) {
+    public Application apply(Long studentId, Long opportunityId) {
 
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -46,7 +49,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Application updateStatus(UUID applicationId, String status) {
+    public Application updateStatus(Long applicationId, String status) {
 
         Application app = repository.findById(applicationId)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
@@ -55,13 +58,19 @@ public class ApplicationServiceImpl implements ApplicationService {
         return repository.save(app);
     }
 
+
     @Override
-    public List<Application> getByStudent(UUID studentId) {
+    public List<Application> getByStudent(Long studentId) {
         return repository.findByStudentId(studentId);
     }
 
     @Override
-    public List<Application> getByOpportunity(UUID opportunityId) {
+    public List<Application> getByOpportunity(Long opportunityId) {
         return repository.findByOpportunityOpportunityId(opportunityId);
+    }
+    
+     public UserDTO getUserFromUserService(Long userId) {
+        String url = "http://user-service/users/" + userId;
+        return restTemplate.getForObject(url, UserDTO.class);
     }
 }

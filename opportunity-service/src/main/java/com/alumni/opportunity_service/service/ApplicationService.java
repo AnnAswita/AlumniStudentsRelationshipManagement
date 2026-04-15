@@ -3,16 +3,16 @@ package com.alumni.opportunity_service.service;
 import com.alumni.opportunity_service.entity.Application;
 
 import java.util.List;
-import java.util.UUID;
+
 
 public interface ApplicationService {
 
-    Application apply(UUID studentId, UUID opportunityId);
+    Application apply(Long studentId, Long opportunityId);
 
-    Application updateStatus(UUID applicationId, String status);
+    Application updateStatus(Long applicationId, String status);
 
-    List<Application> getByStudent(UUID studentId);
+    List<Application> getByStudent(Long studentId);
 
-    List<Application> getByOpportunity(UUID opportunityId);
+    List<Application> getByOpportunity(Long opportunityId);
 }
 

@@ -1,6 +1,8 @@
 package com.alumni.apiaggregator.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+// import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -43,6 +45,23 @@ public class ApiAggregatorController {
 
         return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
     }
+
+    @PostMapping("/users/register")
+    public ResponseEntity<?> registerUser(@RequestBody Object userDto,
+                                      HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> entity = new HttpEntity<>(userDto, headers);
+
+        String url = "http://opportunity-service/api/users";
+
+        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+
+
 
     private void copyAuth(HttpServletRequest req, HttpHeaders headers) {
         String auth = req.getHeader("Authorization");
