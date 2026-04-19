@@ -37,4 +37,10 @@ public class MentorshipController {
     public MentorshipResponseDTO cancel(@PathVariable Long id) {
         return service.cancel(id);
     }
+
+    @GetMapping("/{studentId}/getMentorshipById/{alumniId}")
+    public MentorshipResponseDTO getByStudentAndAlumni(@PathVariable Long studentId,
+                                                       @PathVariable Long alumniId) {
+        return service.getByStudentAndAlumni(studentId, alumniId);
+    }
 }

@@ -126,5 +126,10 @@ public class MentorshipService {
 
         return MentorshipMapper.toDTO(repo.save(m));
     }
+    public MentorshipResponseDTO getByStudentAndAlumni(Long studentId, Long alumniId) {
+        Mentorship mentorship = repo.findByStudentIdAndAlumniId(studentId, alumniId)
+                .orElseThrow(() -> new RuntimeException("Mentorship not found"));
+        return MentorshipMapper.toDTO(mentorship);
+    }
 
 }

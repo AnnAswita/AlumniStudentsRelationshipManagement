@@ -44,6 +44,53 @@ public class ApiAggregatorController {
         return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
     }
 
+    @PostMapping("/users/register")
+    public ResponseEntity<?> registerUser(@RequestBody Object userDto,
+                                      HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> entity = new HttpEntity<>(userDto, headers);
+
+        String url = "http://opportunity-service/api/users";
+
+        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+
+
+
+    @PostMapping("/messaging/request")
+    public ResponseEntity<?> requestMessaging(@RequestBody Object dto,
+                                               HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> entity = new HttpEntity<>(dto, headers);
+
+        String url = "http://message-service/messaging";
+
+        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+
+    @GetMapping("/messaging/{conversationId}")
+    public ResponseEntity<?> getMessages(@PathVariable Long conversationId,
+                                              HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
+
+        String url = "http://message-service/messaging/"+conversationId;
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+
     private void copyAuth(HttpServletRequest req, HttpHeaders headers) {
         String auth = req.getHeader("Authorization");
         if (auth != null) {

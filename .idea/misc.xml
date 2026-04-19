@@ -6,8 +6,15 @@
       <list>
         <option value="$PROJECT_DIR$/mentorship-service/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
-        <option value="$PROJECT_DIR$/api-aggregator/pom.xml" />
         <option value="$PROJECT_DIR$/service-registry/pom.xml" />
+        <option value="$PROJECT_DIR$/api-aggregator/pom.xml" />
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/service-registry/pom.xml" />
+=======
+        <option value="$PROJECT_DIR$/messaging-service/pom.xml" />
+        <option value="$PROJECT_DIR$/event-service/pom.xml" />
+        <option value="$PROJECT_DIR$/opportunity-service/pom.xml" />
+>>>>>>> origin/main
       </list>
     </option>
   </component>
