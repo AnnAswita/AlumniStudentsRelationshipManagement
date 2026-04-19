@@ -7,6 +7,9 @@ import com.alumni.mentorshipservice.dto.*;
 import com.alumni.mentorshipservice.repository.MentorshipRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,8 +31,13 @@ public class MentorshipService {
     }
     @CircuitBreaker(name = "userService", fallbackMethod = "fallbackUser")
     public void validateUser(Long userId) {
-        String url = "http://USER-SERVICE/users/" + userId;
-        restTemplate.getForObject(url, Object.class);
+        String token = request.getHeader("Authorization"); //get JWT from client request
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token); //forward JWT to user-service
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        String url = "http://user-service/users/" + userId;
+        restTemplate.exchange(url, HttpMethod.GET, entity, Void.class);
     }
 
     public void fallbackUser(Long userId, Throwable ex) {
@@ -37,8 +45,13 @@ public class MentorshipService {
     }
 
     public UserDTO getUserFromUserService(Long userId) {
+        String token = request.getHeader("Authorization"); //get JWT from client request
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token); //forward JWT to user-service
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
         String url = "http://user-service/users/" + userId;
-        return restTemplate.getForObject(url, UserDTO.class);
+        return restTemplate.exchange(url, HttpMethod.GET, entity, UserDTO.class).getBody();
     }
     public MentorshipResponseDTO request(MentorshipRequestDTO dto) {
         roleValidator.allowOnlyStudent(request);
@@ -105,7 +118,7 @@ public class MentorshipService {
     public MentorshipResponseDTO cancel(Long id) {
         Mentorship m = repo.findById(id)
                 .orElseThrow();
-        if ((m.getStatus() != MentorshipStatus.ACTIVE) && (m.getStatus() !=MentorshipStatus.ACCEPTED)) {
+        if ((m.getStatus() != MentorshipStatus.REQUESTED) && (m.getStatus() != MentorshipStatus.ACTIVE) && (m.getStatus() !=MentorshipStatus.ACCEPTED)) {
             throw new RuntimeException("Invalid state transition: cannot cancel mentorship in state "+m.getStatus());
         }
         m.setStatus(MentorshipStatus.CANCELLED);
