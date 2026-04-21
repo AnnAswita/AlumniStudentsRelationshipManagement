@@ -16,30 +16,15 @@
         <module name="service-registry" />
         <module name="api-aggregator" />
       </profile>
-      <profile name="Annotation profile for mentorship-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-        </processorPath>
-        <module name="mentorship-service" />
-      </profile>
       <profile name="Annotation profile for opportunity-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-<<<<<<< HEAD
-        <module name="service-registry" />
-        <module name="user-service" />
-        <module name="api-aggregator" />
-=======
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
         </processorPath>
+        <module name="mentorship-service" />
         <module name="opportunity-service" />
->>>>>>> origin/main
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -51,11 +36,8 @@
       <module name="api-aggregator" options="-parameters" />
       <module name="eventservice" options="-parameters" />
       <module name="mentorship-service" options="-parameters" />
-<<<<<<< HEAD
-=======
       <module name="messaging-service" options="-parameters" />
       <module name="opportunity-service" options="-parameters" />
->>>>>>> origin/main
       <module name="service-registry" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

@@ -1,6 +1,7 @@
 package com.aluministudent.aluministudentsrelationshipmanagement.userservice.service;
 
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.config.JwtUtil;
+import com.aluministudent.aluministudentsrelationshipmanagement.userservice.domain.Role;
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.domain.User;
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.dto.LoginRequestDTO;
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.dto.LoginResponseDTO;
@@ -9,6 +10,8 @@ import com.aluministudent.aluministudentsrelationshipmanagement.userservice.dto.
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -56,4 +59,13 @@ public class UserService {
 
         return new LoginResponseDTO(token);
     }
+
+    public List<UserResponseDTO> getUsersByRole(String role) {
+        Role enumRole = Role.valueOf(role.toUpperCase());
+        return repo.findByRole(enumRole)
+                .stream()
+                .map(UserMapper::toDTO)
+                .toList();
+    }
+
 }

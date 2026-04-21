@@ -4,6 +4,8 @@ import com.alumni.mentorshipservice.dto.*;
 import com.alumni.mentorshipservice.service.MentorshipService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/mentorship")
 public class MentorshipController {
@@ -43,4 +45,14 @@ public class MentorshipController {
                                                        @PathVariable Long alumniId) {
         return service.getByStudentAndAlumni(studentId, alumniId);
     }
+    @GetMapping("/student/{studentId}")
+    public List<MentorshipResponseDTO> getByStudent(@PathVariable Long studentId) {
+        return service.getByStudent(studentId);
+    }
+
+    @GetMapping("/alumni/{alumniId}")
+    public List<MentorshipResponseDTO> getByAlumni(@PathVariable Long alumniId) {
+        return service.getByAlumni(alumniId);
+    }
+
 }

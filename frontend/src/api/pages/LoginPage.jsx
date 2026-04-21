@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { loginUser } from "../userApi";
+import { jwtDecode }from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -13,7 +17,20 @@ export default function LoginPage() {
         try {
             const result = await loginUser({ email, password });
             localStorage.setItem("token", result.token);
-            alert("Login successful");
+
+            // Decode JWT
+            const decoded = jwtDecode(result.token);
+            const role = decoded.role;
+
+            // Redirect based on role
+            if (role === "STUDENT") {
+                navigate("/student");
+            } else if (role === "ALUMNI") {
+                navigate("/alumni");
+            } else {
+                navigate("/");
+            }
+
         } catch (err) {
             setError("Invalid email or password");
         }

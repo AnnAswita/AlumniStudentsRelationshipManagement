@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class MentorshipService {
@@ -131,5 +132,19 @@ public class MentorshipService {
                 .orElseThrow(() -> new RuntimeException("Mentorship not found"));
         return MentorshipMapper.toDTO(mentorship);
     }
+    public List<MentorshipResponseDTO> getByStudent(Long studentId) {
+        return repo.findByStudentId(studentId)
+                .stream()
+                .map(MentorshipMapper::toDTO)
+                .toList();
+    }
+
+    public List<MentorshipResponseDTO> getByAlumni(Long alumniId) {
+        return repo.findByAlumniId(alumniId)
+                .stream()
+                .map(MentorshipMapper::toDTO)
+                .toList();
+    }
+
 
 }

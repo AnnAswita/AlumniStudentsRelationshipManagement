@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class ApiAggregatorController {
@@ -28,6 +28,100 @@ public class ApiAggregatorController {
         String url = "http://mentorship-service/mentorship/request";
 
         return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+    @PutMapping("/mentorship/{id}/accept")
+    public ResponseEntity<?> accept(@PathVariable Long id, HttpServletRequest incoming) {
+        return forwardPut("http://mentorship-service/mentorship/" + id + "/accept", incoming);
+    }
+    @PutMapping("/mentorship/{id}/reject")
+    public ResponseEntity<?> reject(@PathVariable Long id, HttpServletRequest incoming) {
+        return forwardPut("http://mentorship-service/mentorship/" + id + "/reject", incoming);
+    }
+    @PutMapping("/mentorship/{id}/complete")
+    public ResponseEntity<?> complete(@PathVariable Long id, HttpServletRequest incoming) {
+        return forwardPut("http://mentorship-service/mentorship/" + id + "/complete", incoming);
+    }
+    @PutMapping("/mentorship/{id}/cancel")
+    public ResponseEntity<?> cancel(@PathVariable Long id, HttpServletRequest incoming) {
+        return forwardPut("http://mentorship-service/mentorship/" + id + "/cancel", incoming);
+    }
+    @GetMapping("/mentorship/{studentId}/getMentorshipById/{alumniId}")
+    public ResponseEntity<?> getMentorship(@PathVariable Long studentId,
+                                           @PathVariable Long alumniId,
+                                           HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://mentorship-service/mentorship/" + studentId + "/getMentorshipById/" + alumniId;
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+    @PostMapping("/meeting/schedule")
+    public ResponseEntity<?> scheduleMeeting(@RequestBody Object dto,
+                                             HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> entity = new HttpEntity<>(dto, headers);
+
+        String url = "http://mentorship-service/meeting/schedule";
+
+        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+    @GetMapping("/meeting")
+    public ResponseEntity<?> getMeetings(@RequestParam Long mentorshipId,
+                                         HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://mentorship-service/meeting?mentorshipId=" + mentorshipId;
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+    private ResponseEntity<?> forwardPut(String url, HttpServletRequest incoming) {
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        return restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
+    }
+    private HttpHeaders buildHeaders(HttpServletRequest req) {
+        HttpHeaders headers = new HttpHeaders();
+        String auth = req.getHeader("Authorization");
+
+        if (auth != null && !auth.isBlank()) {
+            headers.set("Authorization", auth);
+        }
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
+
+    @GetMapping("/mentorship/student/{studentId}")
+    public ResponseEntity<?> getByStudent(@PathVariable Long studentId, HttpServletRequest incoming) {
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://mentorship-service/mentorship/student/" + studentId;
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+
+    @GetMapping("/mentorship/alumni/{alumniId}")
+    public ResponseEntity<?> getByAlumni(@PathVariable Long alumniId, HttpServletRequest incoming) {
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://mentorship-service/mentorship/alumni/" + alumniId;
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
     }
 
     @GetMapping("/users/{id}")

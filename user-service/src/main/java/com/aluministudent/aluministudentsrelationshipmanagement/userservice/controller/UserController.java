@@ -5,6 +5,8 @@ import com.aluministudent.aluministudentsrelationshipmanagement.userservice.dto.
 import com.aluministudent.aluministudentsrelationshipmanagement.userservice.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,4 +26,10 @@ public class UserController {
     public UserResponseDTO getUser(@PathVariable("id") Long id) {
         return service.getUser(id);
     }
+
+    @GetMapping("/role/{role}")
+    public List<UserResponseDTO> getUsersByRole(@PathVariable String role) {
+        return service.getUsersByRole(role);
+    }
+
 }
