@@ -8,6 +8,8 @@ import StudentDashboard from "./api/pages/StudentDashboard";
 import AlumniDashboard from "./api/pages/AlumniDashboard";
 import Navbar from "./components/Navbar";
 import AlumniListPage from "./api/pages/AlumniListPage";
+import EventsPage from "./api/pages/EventsPage";
+
 
 function App() {
     return (
@@ -19,6 +21,7 @@ function App() {
                 <Route path="/student" element={<StudentDashboard />} />
                 <Route path="/alumni" element={<AlumniDashboard />} />
                 <Route path="/student/request-mentorship" element={<AlumniListPage />} />
+                <Route path="/events" element={<EventsPage />} />
 
             </Routes>
         </BrowserRouter>

@@ -32,20 +32,34 @@ export default function Navbar() {
                 )}
 
                 {token && (
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            backgroundColor: "white",
-                            color: "#007bff",
-                            border: "none",
-                            padding: "8px 12px",
-                            borderRadius: "5px",
-                            cursor: "pointer"
-                        }}
-                    >
-                        Logout
-                    </button>
-                )}
+                                    <>
+                                        {/* ⭐ NEW — Events Button */}
+                                        <Link
+                                            to="/events"
+                                            style={{
+                                                color: "white",
+                                                marginRight: "15px",
+                                                textDecoration: "none"
+                                            }}
+                                        >
+                                            Events
+                                        </Link>
+
+                                        <button
+                                            onClick={handleLogout}
+                                            style={{
+                                                backgroundColor: "white",
+                                                color: "#007bff",
+                                                border: "none",
+                                                padding: "8px 12px",
+                                                borderRadius: "5px",
+                                                cursor: "pointer"
+                                            }}
+                                        >
+                                            Logout
+                                        </button>
+                                    </>
+                                )}
             </div>
         </div>
     );
