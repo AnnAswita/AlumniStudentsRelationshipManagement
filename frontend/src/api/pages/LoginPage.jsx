@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { loginUser } from "../userApi";
-import { jwtDecode }from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -17,10 +16,11 @@ export default function LoginPage() {
         try {
             const result = await loginUser({ email, password });
             localStorage.setItem("token", result.token);
+            localStorage.setItem("userId",result.id);
+            localStorage.setItem("role",result.role);
 
-            // Decode JWT
-            const decoded = jwtDecode(result.token);
-            const role = decoded.role;
+            //Get role form the login response
+            const role = localStorage.getItem("role");
 
             // Redirect based on role
             if (role === "STUDENT") {

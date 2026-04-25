@@ -57,7 +57,7 @@ public class UserService {
         // Generate JWT with role
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
 
-        return new LoginResponseDTO(token);
+        return new LoginResponseDTO(token,user.getId(),user.getRole().name());
     }
 
     public List<UserResponseDTO> getUsersByRole(String role) {

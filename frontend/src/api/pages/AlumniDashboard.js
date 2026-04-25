@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
     getMentorshipsByAlumni,
     acceptMentorship,
@@ -9,26 +9,38 @@ import {
 import { scheduleMeeting, getMeetings } from "../meetingApi";
 
 export default function AlumniDashboard() {
-    const [alumniId, setAlumniId] = useState("");
+    const userId = localStorage.getItem("userId");
     const [mentorships, setMentorships] = useState([]);
 
     const loadMentorships = async () => {
-        const data = await getMentorshipsByAlumni(alumniId);
+       if (!userId) return;
+        const data = await getMentorshipsByAlumni(userId);
         setMentorships(data);
     };
+    const handleAccept = async (id) => {
+        await acceptMentorship(id);
+        loadMentorships();
+    };
 
+    const handleReject = async (id) => {
+        await rejectMentorship(id);
+        loadMentorships();
+    };
+    const handleCancel = async (id) => {
+        await cancelMentorship(id);
+        loadMentorships();
+    };
+    const handleComplete = async (id) => {
+        await completeMentorship(id);
+        loadMentorships();
+    };
+
+    useEffect(() => {
+        loadMentorships();
+    }, []);
     return (
         <div style={{ padding: "20px" }}>
             <h2>Alumni Dashboard</h2>
-
-            <input
-                placeholder="Enter Alumni ID"
-                value={alumniId}
-                onChange={(e) => setAlumniId(e.target.value)}
-                style={{ padding: "10px", marginRight: "10px" }}
-            />
-            <button onClick={loadMentorships}>Load Mentorships</button>
-
             <ul>
                 {mentorships.map((m) => (
                     <li key={m.id} style={{ marginTop: "15px" }}>
@@ -39,27 +51,26 @@ export default function AlumniDashboard() {
 
                         {m.status === "REQUESTED" && (
                             <>
-                                <button onClick={() => acceptMentorship(m.id)} style={{ marginRight: "5px" }}>
+                                <button onClick={() => handleAccept(m.id)} style={{ marginRight: "5px" }}>
                                     Accept
                                 </button>
-                                <button onClick={() => rejectMentorship(m.id)} style={{ marginRight: "5px" }}>
+                                <button onClick={() => handleReject(m.id)} style={{ marginRight: "5px" }}>
                                     Reject
                                 </button>
                             </>
                         )}
 
                         {(m.status === "ACTIVE" || m.status === "ACCEPTED") && (
-                            <button onClick={() => cancelMentorship(m.id)} style={{ marginRight: "5px" }}>
+                            <button onClick={() => handleCancel(m.id)} style={{ marginRight: "5px" }}>
                                 Cancel
                             </button>
                         )}
 
                         {m.status === "ACTIVE" && (
-                            <button onClick={() => completeMentorship(m.id)} style={{ marginRight: "5px" }}>
+                            <button onClick={() => handleComplete(m.id)} style={{ marginRight: "5px" }}>
                                 Complete
                             </button>
                         )}
-
                         <button onClick={async () => {
                             await scheduleMeeting(m.id);
                             alert("Meeting scheduled");

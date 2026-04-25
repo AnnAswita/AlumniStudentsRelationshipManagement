@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
     getMentorshipsByStudent,
     cancelMentorship,
@@ -8,13 +8,16 @@ import { scheduleMeeting, getMeetings } from "../meetingApi";
 import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
-    const [studentId, setStudentId] = useState("");
     const [mentorships, setMentorships] = useState([]);
-
+    const userId = localStorage.getItem("userId");
     const loadMentorships = async () => {
-        const data = await getMentorshipsByStudent(studentId);
+        if(!userId) return;
+        const data = await getMentorshipsByStudent(userId);
         setMentorships(data);
     };
+    useEffect(() => {
+        loadMentorships();
+    }, []);
 
     const handleCancel = async (id) => {
         await cancelMentorship(id);
@@ -40,21 +43,6 @@ export default function StudentDashboard() {
     return (
         <div style={{ padding: "20px" }}>
             <h2>Student Dashboard</h2>
-
-            <input
-                placeholder="Enter Student ID"
-                value={studentId}
-                onChange={(e) => {
-                    setStudentId(e.target.value);
-                    localStorage.setItem("studentId", e.target.value);
-                }}
-                style={{ padding: "10px", marginRight: "10px" }}
-            />
-
-            <button onClick={loadMentorships} style={{ marginRight: "10px" }}>
-                Load Mentorships
-            </button>
-
             <button
                 onClick={() => navigate("/student/request-mentorship")}
                 style={{
