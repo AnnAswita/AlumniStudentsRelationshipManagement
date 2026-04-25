@@ -8,6 +8,10 @@ export default function Navbar() {
         localStorage.removeItem("token");
         navigate("/login");
     };
+    const goHome = () => {
+        const role = localStorage.getItem("role");
+        navigate(role === "STUDENT" ? "/student" : "/alumni");
+    };
 
     return (
         <div style={{
@@ -24,6 +28,7 @@ export default function Navbar() {
             </div>
 
             <div>
+
                 {!token && (
                     <>
                         <Link to="/" style={{ color: "white", marginRight: "15px" }}>Register</Link>
@@ -33,7 +38,20 @@ export default function Navbar() {
 
                 {token && (
                                     <>
-                                        {/* ⭐ NEW — Events Button */}
+                                        <button
+                                            onClick={goHome}
+                                            style={{
+                                                backgroundColor: "transparent",
+                                                color: "white",
+                                                border: "none",
+                                                marginRight: "15px",
+                                                cursor: "pointer",
+                                                fontSize: "16px"
+                                            }}
+                                        >
+                                            Home
+                                        </button>
+                                        {/* Events Button */}
                                         <Link
                                             to="/events"
                                             style={{
