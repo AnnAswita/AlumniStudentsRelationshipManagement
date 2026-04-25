@@ -39,7 +39,7 @@ export default function AlumniDashboard() {
         loadMentorships();
     }, []);
     return (
-        <div style={{ padding: "20px" }}>
+        <div className="black-text-conatiner" style={{ padding: "20px" }}>
             <h2>Alumni Dashboard</h2>
             <ul>
                 {mentorships.map((m) => (

@@ -30,7 +30,7 @@ export default function AlumniListPage() {
     };
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div className="black-text-conatiner" style={{ padding: "20px" }}>
             <h2>Select an Alumni</h2>
 
             <ul>

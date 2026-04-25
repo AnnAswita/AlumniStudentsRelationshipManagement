@@ -7,7 +7,7 @@ export default function EventsPage() {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="black-text-conatiner" style={{ padding: 20 }}>
       <h1>Event Management</h1>
 
       <EventCreate />

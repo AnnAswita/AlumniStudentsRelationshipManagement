@@ -41,7 +41,7 @@ export default function StudentDashboard() {
     const navigate = useNavigate();
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div className="black-text-conatiner" style={{ padding: "20px" }}>
             <h2>Student Dashboard</h2>
             <button
                 onClick={() => navigate("/student/request-mentorship")}
