@@ -1,3 +1,5 @@
+import {apiFetch} from "./apiFetch";
+
 const BASE_URL = "http://localhost:8085/api/meeting";
 
 function authHeader() {
@@ -6,20 +8,23 @@ function authHeader() {
 }
 
 export async function scheduleMeeting(mentorshipId) {
-    const res = await fetch(`${BASE_URL}/schedule`, {
+    const body = {
+        mentorshipId,
+        description: "Auto-generated meeting",
+        date: new Date().toISOString().slice(0,16)
+    };
+    return apiFetch(`${BASE_URL}/schedule`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             ...authHeader()
         },
-        body: JSON.stringify({ mentorshipId })
+        body: JSON.stringify(body)
     });
-    return res.json();
 }
 
 export async function getMeetings(mentorshipId) {
-    const res = await fetch(`${BASE_URL}?mentorshipId=${mentorshipId}`, {
+    return apiFetch(`${BASE_URL}?mentorshipId=${mentorshipId}`, {
         headers: { ...authHeader() }
     });
-    return res.json();
 }

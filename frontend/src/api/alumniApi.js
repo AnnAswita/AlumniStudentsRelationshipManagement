@@ -1,3 +1,5 @@
+import {apiFetch} from "./apiFetch";
+
 const BASE_URL = "http://localhost:8081/users/role/ALUMNI";
 
 function authHeader() {
@@ -6,8 +8,7 @@ function authHeader() {
 }
 
 export async function getAllAlumni() {
-    const res = await fetch(BASE_URL, {
+   return apiFetch(BASE_URL, {
         headers: { ...authHeader() }
     });
-    return res.json();
 }

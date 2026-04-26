@@ -1,3 +1,5 @@
+import {apiFetch} from "./apiFetch";
+
 const BASE_URL = "http://localhost:8081";
 
 export async function loginUser(credentials) {
@@ -15,16 +17,10 @@ export async function loginUser(credentials) {
 }
 
 export async function registerUser(data) {
-    const response = await fetch(`${BASE_URL}/users/register`, {
+    return apiFetch(`${BASE_URL}/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
-
-    if (!response.ok) {
-        throw new Error("Registration failed");
-    }
-
-    return response.json();
 }
 

@@ -1,3 +1,5 @@
+import {apiFetch} from "./apiFetch";
+
 const BASE_URL = "http://localhost:8085/api/mentorship";
 
 function authHeader() {
@@ -6,49 +8,47 @@ function authHeader() {
 }
 
 export async function getMentorshipsByStudent(studentId) {
-    const res = await fetch(`${BASE_URL}/student/${studentId}`, {
+    return apiFetch(`${BASE_URL}/student/${studentId}`, {
         headers: { ...authHeader() }
     });
-    return res.json();
 }
 
 export async function getMentorshipsByAlumni(alumniId) {
-    const res = await fetch(`${BASE_URL}/alumni/${alumniId}`, {
+    return apiFetch(`${BASE_URL}/alumni/${alumniId}`, {
         headers: { ...authHeader() }
     });
-    return res.json();
 }
 
 export async function acceptMentorship(id) {
-    return fetch(`${BASE_URL}/${id}/accept`, {
+    return apiFetch(`${BASE_URL}/${id}/accept`, {
         method: "PUT",
         headers: { ...authHeader() }
     });
 }
 
 export async function rejectMentorship(id) {
-    return fetch(`${BASE_URL}/${id}/reject`, {
+    return apiFetch(`${BASE_URL}/${id}/reject`, {
         method: "PUT",
         headers: { ...authHeader() }
     });
 }
 
 export async function cancelMentorship(id) {
-    return fetch(`${BASE_URL}/${id}/cancel`, {
+    return apiFetch(`${BASE_URL}/${id}/cancel`, {
         method: "PUT",
         headers: { ...authHeader() }
     });
 }
 
 export async function completeMentorship(id) {
-    return fetch(`${BASE_URL}/${id}/complete`, {
+    return apiFetch(`${BASE_URL}/${id}/complete`, {
         method: "PUT",
         headers: { ...authHeader() }
     });
 }
 
 export async function requestMentorship(studentId, alumniId) {
-    const res = await fetch(`http://localhost:8085/api/mentorship/request`, {
+    return apiFetch(`http://localhost:8085/api/mentorship/request`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -56,5 +56,4 @@ export async function requestMentorship(studentId, alumniId) {
         },
         body: JSON.stringify({ studentId, alumniId })
     });
-    return res.json();
 }

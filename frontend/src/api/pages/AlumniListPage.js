@@ -18,9 +18,9 @@ export default function AlumniListPage() {
     };
 
     const handleRequest = async (alumniId) => {
-        const studentId = localStorage.getItem("studentId");
+        const studentId = localStorage.getItem("userId");
         if (!studentId) {
-            alert("Student ID missing. Please enter it in the dashboard first.");
+            alert("Student ID missing.");
             return;
         }
 
