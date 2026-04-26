@@ -9,6 +9,8 @@ import AlumniDashboard from "./api/pages/AlumniDashboard";
 import Navbar from "./components/Navbar";
 import AlumniListPage from "./api/pages/AlumniListPage";
 import EventsPage from "./api/pages/EventsPage";
+import CreateMeetingPage from "./api/pages/CreateMeetingPage";
+import ViewMeetingsPage from "./api/pages/ViewMeetingsPage";
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
                 <Route path="/student" element={<StudentDashboard />} />
                 <Route path="/alumni" element={<AlumniDashboard />} />
                 <Route path="/student/request-mentorship" element={<AlumniListPage />} />
+                <Route path="/meeting/create/:mentorshipId" element={<CreateMeetingPage />} />
+                <Route path="/meeting/view/:mentorshipId" element={<ViewMeetingsPage />} />
                 <Route path="/events" element={<EventsPage />} />
 
             </Routes>

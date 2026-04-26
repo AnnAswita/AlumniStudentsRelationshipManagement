@@ -8,19 +8,25 @@ export default function CreateMeetingPage() {
 
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
+    const role = localStorage.getItem("role");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        await scheduleMeeting({
-            mentorshipId,
-            description,
-            date
-        });
+        try {
+            await scheduleMeeting({
+                mentorshipId,
+                description,
+                date
+            });
 
-        alert("Meeting scheduled successfully");
-        navigate("/student"); // or /alumni depending on role
+            alert("Meeting scheduled successfully");
+            navigate(role === "ALUMNI" ? "/alumni" : "/student");
+        } catch (err) {
+            alert(err.message); // shows backend message
+        }
     };
+
 
     return (
         <div className="black-text-container" style={{ padding: "20px" }}>

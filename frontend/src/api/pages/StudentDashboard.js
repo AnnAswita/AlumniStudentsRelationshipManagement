@@ -65,10 +65,6 @@ export default function StudentDashboard() {
                         <strong>Alumni:</strong> {m.alumniId}
                         <br />
 
-                        <button onClick={() => handleViewMeetings(m.id)} style={{ marginRight: "5px" }}>
-                            View Meetings
-                        </button>
-
                         {(m.status === "REQUESTED" ||
                             m.status === "ACCEPTED" ||
                             m.status === "ACTIVE") && (
@@ -82,10 +78,19 @@ export default function StudentDashboard() {
                                 Complete
                             </button>
                         )}
-
-                        <button onClick={() => handleSchedule(m.id)} style={{ marginLeft: "5px" }}>
-                            Schedule Meeting
+                        <button onClick={() => navigate(`/meeting/view/${m.id}`)}>
+                            View Meetings
                         </button>
+
+                        {/* Schedule Meeting allowed only in ACCEPTED or ACTIVE */}
+                        {(m.status === "ACCEPTED" || m.status === "ACTIVE") && (
+                            <button
+                                onClick={() => navigate(`/meeting/create/${m.id}`)}
+                                style={{ marginLeft: "5px" }}
+                            >
+                                Schedule Meeting
+                            </button>
+                        )}
                     </li>
                 ))}
             </ul>

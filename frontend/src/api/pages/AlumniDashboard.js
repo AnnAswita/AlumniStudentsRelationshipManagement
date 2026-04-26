@@ -7,6 +7,7 @@ import {
     completeMentorship
 } from "../mentorshipApi";
 import { scheduleMeeting, getMeetings } from "../meetingApi";
+import {useNavigate} from "react-router-dom";
 
 export default function AlumniDashboard() {
     const userId = localStorage.getItem("userId");
@@ -38,6 +39,7 @@ export default function AlumniDashboard() {
     useEffect(() => {
         loadMentorships();
     }, []);
+    const navigate = useNavigate();
     return (
         <div className="black-text-conatiner" style={{ padding: "20px" }}>
             <h2>Alumni Dashboard</h2>
@@ -71,19 +73,20 @@ export default function AlumniDashboard() {
                                 Complete
                             </button>
                         )}
-                        <button onClick={async () => {
-                            await scheduleMeeting(m.id);
-                            alert("Meeting scheduled");
-                        }}>
-                            Schedule Meeting
-                        </button>
+                        {/* Schedule Meeting allowed only in ACCEPTED or ACTIVE */}
+                        {(m.status === "ACCEPTED" || m.status === "ACTIVE") && (
+                            <button
+                                onClick={() => navigate(`/meeting/create/${m.id}`)}
+                                style={{ marginLeft: "5px" }}
+                            >
+                                Schedule Meeting
+                            </button>
+                        )}
 
-                        <button onClick={async () => {
-                            const data = await getMeetings(m.id);
-                            alert(JSON.stringify(data, null, 2));
-                        }} style={{ marginLeft: "5px" }}>
+                        <button onClick={() => navigate(`/meeting/view/${m.id}`)}>
                             View Meetings
                         </button>
+
                     </li>
                 ))}
             </ul>

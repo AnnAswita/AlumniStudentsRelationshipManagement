@@ -7,19 +7,14 @@ function authHeader() {
     return token ? { "Authorization": `Bearer ${token}` } : {};
 }
 
-export async function scheduleMeeting(mentorshipId) {
-    const body = {
-        mentorshipId,
-        description: "Auto-generated meeting",
-        date: new Date().toISOString().slice(0,16)
-    };
-    return apiFetch(`${BASE_URL}/schedule`, {
+export function scheduleMeeting(meetingData) {
+    return apiFetch("http://localhost:8085/api/meeting/schedule", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            ...authHeader()
+            Authorization: `Bearer ${localStorage.getItem("token")}`
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(meetingData)
     });
 }
 

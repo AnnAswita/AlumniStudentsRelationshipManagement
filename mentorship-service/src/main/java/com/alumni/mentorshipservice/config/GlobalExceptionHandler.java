@@ -12,6 +12,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleRuntime(RuntimeException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMessage());
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    static class ErrorResponse {
+        public String message;
+        public ErrorResponse(String message) {
+            this.message = message;
+        }
     }
 }
