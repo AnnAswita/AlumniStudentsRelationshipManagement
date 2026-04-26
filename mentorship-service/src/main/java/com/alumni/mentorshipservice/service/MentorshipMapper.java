@@ -12,12 +12,14 @@ public class MentorshipMapper {
         return m;
     }
 
-    public static MentorshipResponseDTO toDTO(Mentorship m) {
+    public static MentorshipResponseDTO toDTO(Mentorship m, UserDTO student, UserDTO alumni) {
         MentorshipResponseDTO dto = new MentorshipResponseDTO();
         dto.setId(m.getId());
         dto.setStudentId(m.getStudentId());
         dto.setAlumniId(m.getAlumniId());
         dto.setStatus(m.getStatus().name());
+        dto.setStudentName(student.getName());
+        dto.setAlumniName(alumni.getName());
         return dto;
     }
 }

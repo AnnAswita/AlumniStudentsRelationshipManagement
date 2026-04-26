@@ -63,8 +63,10 @@ public class MentorshipService {
         Mentorship m = MentorshipMapper.toEntity(dto);
         m.setStatus(MentorshipStatus.REQUESTED);
         m.setRequestDate(LocalDate.now());
-
-        return MentorshipMapper.toDTO(repo.save(m));
+        m=repo.save(m);
+        UserDTO student = getUserFromUserService(m.getStudentId());
+        UserDTO alumni = getUserFromUserService(m.getAlumniId());
+        return MentorshipMapper.toDTO(m,student,alumni);
     }
 
     public MentorshipResponseDTO reject(Long id){
@@ -76,7 +78,10 @@ public class MentorshipService {
         }
         m.setStatus(MentorshipStatus.REJECTED);
         m.setEndDate(LocalDate.now());
-        return MentorshipMapper.toDTO(repo.save(m));
+        m=repo.save(m);
+        UserDTO student = getUserFromUserService(m.getStudentId());
+        UserDTO alumni = getUserFromUserService(m.getAlumniId());
+        return MentorshipMapper.toDTO(m,student,alumni);
     }
 
     public MentorshipResponseDTO accept(Long id) {
@@ -90,7 +95,10 @@ public class MentorshipService {
         m.setStatus(MentorshipStatus.ACCEPTED);
         m.setStartDate(LocalDate.now());
 
-        return MentorshipMapper.toDTO(repo.save(m));
+        m=repo.save(m);
+        UserDTO student = getUserFromUserService(m.getStudentId());
+        UserDTO alumni = getUserFromUserService(m.getAlumniId());
+        return MentorshipMapper.toDTO(m,student,alumni);
     }
 
     public MentorshipResponseDTO activate(Long id){
@@ -102,7 +110,10 @@ public class MentorshipService {
 
         m.setStatus(MentorshipStatus.ACTIVE);
 
-        return MentorshipMapper.toDTO(repo.save(m));
+        m=repo.save(m);
+        UserDTO student = getUserFromUserService(m.getStudentId());
+        UserDTO alumni = getUserFromUserService(m.getAlumniId());
+        return MentorshipMapper.toDTO(m,student,alumni);
     }
 
     public MentorshipResponseDTO complete(Long id) {
@@ -114,7 +125,10 @@ public class MentorshipService {
         m.setStatus(MentorshipStatus.COMPLETED);
         m.setEndDate(LocalDate.now());
 
-        return MentorshipMapper.toDTO(repo.save(m));
+        m=repo.save(m);
+        UserDTO student = getUserFromUserService(m.getStudentId());
+        UserDTO alumni = getUserFromUserService(m.getAlumniId());
+        return MentorshipMapper.toDTO(m,student,alumni);
     }
     public MentorshipResponseDTO cancel(Long id) {
         Mentorship m = repo.findById(id)
@@ -125,24 +139,39 @@ public class MentorshipService {
         m.setStatus(MentorshipStatus.CANCELLED);
         m.setEndDate(LocalDate.now());
 
-        return MentorshipMapper.toDTO(repo.save(m));
+        m=repo.save(m);
+        UserDTO student = getUserFromUserService(m.getStudentId());
+        UserDTO alumni = getUserFromUserService(m.getAlumniId());
+        return MentorshipMapper.toDTO(m,student,alumni);
     }
     public MentorshipResponseDTO getByStudentAndAlumni(Long studentId, Long alumniId) {
         Mentorship mentorship = repo.findByStudentIdAndAlumniId(studentId, alumniId)
                 .orElseThrow(() -> new RuntimeException("Mentorship not found"));
-        return MentorshipMapper.toDTO(mentorship);
+        UserDTO student = getUserFromUserService(mentorship.getStudentId());
+        UserDTO alumni = getUserFromUserService(mentorship.getAlumniId());
+
+        // Return DTO with names included
+        return MentorshipMapper.toDTO(mentorship, student, alumni);
     }
     public List<MentorshipResponseDTO> getByStudent(Long studentId) {
         return repo.findByStudentId(studentId)
                 .stream()
-                .map(MentorshipMapper::toDTO)
+                .map(m -> {
+                    UserDTO student = getUserFromUserService(m.getStudentId());
+                    UserDTO alumni = getUserFromUserService(m.getAlumniId());
+                    return MentorshipMapper.toDTO(m, student, alumni);
+                })
                 .toList();
     }
 
     public List<MentorshipResponseDTO> getByAlumni(Long alumniId) {
         return repo.findByAlumniId(alumniId)
                 .stream()
-                .map(MentorshipMapper::toDTO)
+                .map(m -> {
+                    UserDTO student = getUserFromUserService(m.getStudentId());
+                    UserDTO alumni = getUserFromUserService(m.getAlumniId());
+                    return MentorshipMapper.toDTO(m, student, alumni);
+                })
                 .toList();
     }
 

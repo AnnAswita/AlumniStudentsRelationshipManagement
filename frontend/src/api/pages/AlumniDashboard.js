@@ -48,7 +48,7 @@ export default function AlumniDashboard() {
                     <li key={m.id} style={{ marginTop: "15px" }}>
                         <strong>ID:</strong> {m.id} |
                         <strong>Status:</strong> {m.status} |
-                        <strong>Student:</strong> {m.studentId}
+                        <strong>Student:</strong> {m.studentName}
                         <br />
 
                         {m.status === "REQUESTED" && (
