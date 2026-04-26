@@ -22,4 +22,12 @@ public class MentorshipMapper {
         dto.setAlumniName(alumni.getName());
         return dto;
     }
+
+    public static MentorshipResponseDTO toStatusDTO(Mentorship mentorship) {
+        MentorshipResponseDTO dto = new MentorshipResponseDTO();
+        dto.setStudentId(mentorship.getStudentId());
+        dto.setAlumniId(mentorship.getAlumniId());
+        dto.setStatus(String.valueOf(mentorship.getStatus()));
+        return dto;
+    }
 }

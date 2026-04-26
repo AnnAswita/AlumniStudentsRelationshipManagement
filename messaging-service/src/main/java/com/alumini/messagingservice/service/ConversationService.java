@@ -25,12 +25,9 @@ import java.util.stream.Collectors;
         }
 
         public ConversationResponse startOrGetConversation(Long senderId, Long receiverId) {
-            if (!userServiceClient.userExists(senderId)) {
-                throw new RuntimeException("Sender does not exist");
-            }
 
-            if (!userServiceClient.userExists(receiverId)) {
-                throw new RuntimeException("Receiver does not exist");
+            if (senderId == null || receiverId == null) {
+                throw new RuntimeException("Sender ID and Receiver ID are required");
             }
 
             Conversation existing = conversationRepository

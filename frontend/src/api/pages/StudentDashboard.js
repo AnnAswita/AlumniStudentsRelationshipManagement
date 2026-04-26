@@ -1,20 +1,24 @@
-import {useEffect, useState} from "react";
+import { useState, useEffect } from "react";
 import {
     getMentorshipsByStudent,
     cancelMentorship,
-    completeMentorship
+    completeMentorship,
+    canOpenMessaging,
+    buildMessagingRouteState
 } from "../mentorshipApi";
-import { scheduleMeeting, getMeetings } from "../meetingApi";
 import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
     const [mentorships, setMentorships] = useState([]);
     const userId = localStorage.getItem("userId");
+    const navigate = useNavigate();
+
     const loadMentorships = async () => {
-        if(!userId) return;
+        if (!userId) return;
         const data = await getMentorshipsByStudent(userId);
         setMentorships(data);
     };
+
     useEffect(() => {
         loadMentorships();
     }, []);
@@ -29,20 +33,20 @@ export default function StudentDashboard() {
         loadMentorships();
     };
 
-    const handleSchedule = async (id) => {
-        await scheduleMeeting(id);
-        alert("Meeting scheduled");
+    const handleMessage = (mentorship) => {
+        navigate(`/chat/${mentorship.id}`, {
+            state: buildMessagingRouteState(
+                mentorship,
+                userId,
+                "STUDENT"
+            )
+        });
     };
-
-    const handleViewMeetings = async (id) => {
-        const data = await getMeetings(id);
-        alert(JSON.stringify(data, null, 2));
-    };
-    const navigate = useNavigate();
 
     return (
         <div className="black-text-conatiner" style={{ padding: "20px" }}>
             <h2>Student Dashboard</h2>
+
             <button
                 onClick={() => navigate("/student/request-mentorship")}
                 style={{
@@ -78,11 +82,11 @@ export default function StudentDashboard() {
                                 Complete
                             </button>
                         )}
+
                         <button onClick={() => navigate(`/meeting/view/${m.id}`)}>
                             View Meetings
                         </button>
 
-                        {/* Schedule Meeting allowed only in ACCEPTED or ACTIVE */}
                         {(m.status === "ACCEPTED" || m.status === "ACTIVE") && (
                             <button
                                 onClick={() => navigate(`/meeting/create/${m.id}`)}
@@ -91,6 +95,14 @@ export default function StudentDashboard() {
                                 Schedule Meeting
                             </button>
                         )}
+
+                        <button
+                            onClick={() => handleMessage(m)}
+                            disabled={!canOpenMessaging(m.status)}
+                            style={{ marginLeft: "5px" }}
+                        >
+                            {canOpenMessaging(m.status) ? "Message" : "Messaging Disabled"}
+                        </button>
                     </li>
                 ))}
             </ul>

@@ -153,8 +153,6 @@ public class ApiAggregatorController {
         return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
     }
 
-
-
     @PostMapping("/messaging/request")
     public ResponseEntity<?> requestMessaging(@RequestBody Object dto,
                                                HttpServletRequest incoming) {
@@ -170,19 +168,46 @@ public class ApiAggregatorController {
         return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
     }
 
-    @GetMapping("/messaging/{conversationId}")
-    public ResponseEntity<?> getMessages(@PathVariable Long conversationId,
-                                              HttpServletRequest incoming) {
+    @GetMapping("/messages/{conversationId}")
+    public ResponseEntity<?> getMessagesByConversation(@PathVariable Long conversationId,
+                                                       HttpServletRequest incoming) {
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        HttpHeaders headers = new HttpHeaders();
-        copyAuth(incoming, headers);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<Object> entity = new HttpEntity<>(headers);
-
-        String url = "http://message-service/messaging/"+conversationId;
+        String url = "http://MESSAGING-SERVICE/messages/" + conversationId;
 
         return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<?> sendMessage(@RequestBody Object dto,
+                                         HttpServletRequest incoming) {
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Object> entity = new HttpEntity<>(dto, headers);
+
+        String url = "http://MESSAGING-SERVICE/messages";
+
+        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+
+    @PutMapping("/messages/read/{id}")
+    public ResponseEntity<?> markMessageAsRead(@PathVariable Long id,
+                                               HttpServletRequest incoming) {
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://MESSAGING-SERVICE/messages/read/" + id;
+
+        return restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
+    }
+
+    @PostMapping("/conversations/start")
+    public Object startConversation(@RequestBody Object request) {
+        return restTemplate.postForObject(
+                "http://MESSAGING-SERVICE/conversations/start",
+                request,
+                Object.class
+        );
     }
 
     private void copyAuth(HttpServletRequest req, HttpHeaders headers) {

@@ -29,6 +29,13 @@ public class JwtFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
+        String path = req.getServletPath();
+
+        if (path.matches("/mentorship/\\d+/getMentorshipById/\\d+")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String header = req.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {

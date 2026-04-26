@@ -62,6 +62,13 @@ export default function Navbar() {
                                         >
                                             Events
                                         </Link>
+                                        <Link to="/about"
+                                              style={{
+                                                  color: "white",
+                                                  marginRight: "15px",
+                                                  textDecoration: "none"
+                                              }}
+                                        >About</Link>
 
                                         <button
                                             onClick={handleLogout}

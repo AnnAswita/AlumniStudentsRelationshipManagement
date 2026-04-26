@@ -4,7 +4,9 @@ import {
     acceptMentorship,
     rejectMentorship,
     cancelMentorship,
-    completeMentorship
+    completeMentorship,
+    canOpenMessaging,
+    buildMessagingRouteState
 } from "../mentorshipApi";
 import { scheduleMeeting, getMeetings } from "../meetingApi";
 import {useNavigate} from "react-router-dom";
@@ -40,6 +42,17 @@ export default function AlumniDashboard() {
         loadMentorships();
     }, []);
     const navigate = useNavigate();
+
+    const handleMessage = (mentorship) => {
+        navigate(`/chat/${mentorship.id}`, {
+            state: buildMessagingRouteState(
+                mentorship,
+                userId,
+                "ALUMNI"
+            )
+        });
+    };
+
     return (
         <div className="black-text-conatiner" style={{ padding: "20px" }}>
             <h2>Alumni Dashboard</h2>
@@ -87,6 +100,13 @@ export default function AlumniDashboard() {
                             View Meetings
                         </button>
 
+                        <button
+                            onClick={() => handleMessage(m)}
+                            disabled={!canOpenMessaging(m.status)}
+                            style={{ marginLeft: "5px" }}
+                        >
+                            {canOpenMessaging(m.status) ? "Message" : "Messaging Disabled"}
+                        </button>
                     </li>
                 ))}
             </ul>

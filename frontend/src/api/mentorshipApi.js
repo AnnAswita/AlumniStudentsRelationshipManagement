@@ -57,3 +57,30 @@ export async function requestMentorship(studentId, alumniId) {
         body: JSON.stringify({ studentId, alumniId })
     });
 }
+
+const MESSAGE_ALLOWED_STATUSES = ["ACCEPTED", "ACTIVE"];
+
+export function canOpenMessaging(status) {
+    return MESSAGE_ALLOWED_STATUSES.includes(String(status).toUpperCase());
+}
+
+export function buildMessagingRouteState(mentorship, currentUserId, currentUserRole) {
+    const senderId = Number(currentUserId);
+
+    const receiverId =
+        String(currentUserRole).toUpperCase() === "STUDENT"
+            ? mentorship.alumniId
+            : mentorship.studentId;
+
+    return {
+        mentorshipId: mentorship.id,
+        mentorshipStatus: mentorship.status,
+        senderId,
+        receiverId,
+        studentId: mentorship.studentId,
+        alumniId: mentorship.alumniId,
+        studentName: mentorship.studentName,
+        alumniName: mentorship.alumniName,
+        currentUserRole
+    };
+}
