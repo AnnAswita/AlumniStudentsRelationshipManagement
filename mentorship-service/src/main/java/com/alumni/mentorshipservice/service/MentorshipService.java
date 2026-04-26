@@ -147,11 +147,9 @@ public class MentorshipService {
     public MentorshipResponseDTO getByStudentAndAlumni(Long studentId, Long alumniId) {
         Mentorship mentorship = repo.findByStudentIdAndAlumniId(studentId, alumniId)
                 .orElseThrow(() -> new RuntimeException("Mentorship not found"));
-        UserDTO student = getUserFromUserService(mentorship.getStudentId());
-        UserDTO alumni = getUserFromUserService(mentorship.getAlumniId());
 
         // Return DTO with names included
-        return MentorshipMapper.toDTO(mentorship, student, alumni);
+        return MentorshipMapper.toStatusDTO(mentorship);
     }
     public List<MentorshipResponseDTO> getByStudent(Long studentId) {
         return repo.findByStudentId(studentId)

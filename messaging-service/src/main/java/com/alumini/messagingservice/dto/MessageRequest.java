@@ -6,6 +6,8 @@ public class MessageRequest {
     private Long senderId;
     private Long receiverId;
     private String content;
+    private Long studentId;
+    private Long alumniId;
 
     public MessageRequest() {
     }
@@ -40,5 +42,21 @@ public class MessageRequest {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Long getAlumniId() {
+        return alumniId;
+    }
+
+    public void setAlumniId(Long alumniId) {
+        this.alumniId = alumniId;
     }
 }

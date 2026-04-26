@@ -8,9 +8,11 @@ import StudentDashboard from "./api/pages/StudentDashboard";
 import AlumniDashboard from "./api/pages/AlumniDashboard";
 import Navbar from "./components/Navbar";
 import AlumniListPage from "./api/pages/AlumniListPage";
+import ChatPage from "./api/pages/ChatPage";
 import EventsPage from "./api/pages/EventsPage";
 import CreateMeetingPage from "./api/pages/CreateMeetingPage";
 import ViewMeetingsPage from "./api/pages/ViewMeetingsPage";
+import AboutPage from "./api/pages/AboutPage";
 
 
 function App() {
@@ -26,7 +28,8 @@ function App() {
                 <Route path="/meeting/create/:mentorshipId" element={<CreateMeetingPage />} />
                 <Route path="/meeting/view/:mentorshipId" element={<ViewMeetingsPage />} />
                 <Route path="/events" element={<EventsPage />} />
-
+                <Route path="/chat/:mentorshipId" element={<ChatPage />} />
+                <Route path="/about" element={<AboutPage />} />
             </Routes>
         </BrowserRouter>
     );

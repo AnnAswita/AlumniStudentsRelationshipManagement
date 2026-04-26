@@ -38,26 +38,26 @@ export default function LoginPage() {
 
     return (
         <div style={{
-            width: "350px",
+            width: "380px",
             margin: "auto",
-            marginTop: "60px",
+            marginTop: "80px",
             padding: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "10px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+            background: "#ffffff",
+            borderRadius: "12px",
+            boxShadow: "0 8px 25px rgba(0,0,0,0.15)"
         }}>
 
-            {/* ⭐ Project Title */}
+            {/* Project Title */}
             <h1 style={{
                 textAlign: "center",
                 fontWeight: "bold",
                 marginBottom: "20px",
                 fontSize: "22px"
             }}>
-                Alumni–Student Project Management
+                Welcome Back
             </h1>
 
-            <h2 style={{ textAlign: "center" }}>Login</h2>
+            {/* <h2 style={{ textAlign: "center" }}>Login</h2>*/}
 
             {error && (
                 <p style={{ color: "red", textAlign: "center" }}>
@@ -72,7 +72,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
+                    style={{ width: "90%", padding: "10px", marginBottom: "10px" }}
                 />
 
                 <input
@@ -81,13 +81,13 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
+                    style={{ width: "90%", padding: "10px", marginBottom: "15px" }}
                 />
 
                 <button
                     type="submit"
                     style={{
-                        width: "100%",
+                        width: "95%",
                         padding: "10px",
                         backgroundColor: "#007bff",
                         color: "white",

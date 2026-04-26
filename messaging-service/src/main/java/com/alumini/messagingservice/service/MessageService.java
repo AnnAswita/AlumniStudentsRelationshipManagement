@@ -24,43 +24,30 @@ public class MessageService {
     public UserServiceClient userServiceClient;
     public ConversationRepository conversationRepository;
 
-    public MessageService(MessageRepository messageRepository, RestTemplate restTemplate) {
+    public MessageService(MessageRepository messageRepository, RestTemplate restTemplate,
+                          ConversationRepository conversationRepository) {
         this.messageRepository = messageRepository;
         this.restTemplate = restTemplate;
+        this.conversationRepository = conversationRepository;
     }
 
     public MessageResponse sendMessage(MessageRequest request) {
-        UserDTO sender = getUserFromUserService(request.getSenderId());
-        UserDTO receiver = getUserFromUserService(request.getReceiverId());
 
-        if (sender == null) {
-            throw new RuntimeException("Sender does not exist");
-        }
+        Long studentId = request.getStudentId();
+        Long alumniId = request.getAlumniId();
 
-        if (receiver == null) {
-            throw new RuntimeException("Receiver does not exist");
-        }
-
-        Long studentId;
-        Long alumniId;
-
-        if ("STUDENT".equalsIgnoreCase(sender.getRole()) && "ALUMNI".equalsIgnoreCase(receiver.getRole())) {
-            studentId = sender.getId();
-            alumniId = receiver.getId();
-        } else if ("ALUMNI".equalsIgnoreCase(sender.getRole()) && "STUDENT".equalsIgnoreCase(receiver.getRole())) {
-            studentId = receiver.getId();
-            alumniId = sender.getId();
-        } else {
-            throw new RuntimeException("Messaging is only allowed between a student and an alumni");
+        if (studentId == null || alumniId == null) {
+            throw new RuntimeException("Student ID and Alumni ID are required");
         }
 
         MentorshipDTO mentorship = getMentorshipFromMentorshipService(studentId, alumniId);
 
-        if (mentorship == null || !"ACCEPTED".equalsIgnoreCase(mentorship.getStatus())) {
+        if (mentorship == null ||
+                (!"ACCEPTED".equalsIgnoreCase(mentorship.getStatus())
+                        && !"ACTIVE".equalsIgnoreCase(mentorship.getStatus()))) {
             throw new RuntimeException("Messaging is allowed only after mentorship acceptance");
         }
 
-        Message message = new Message();
         Conversation conversation = conversationRepository
                 .findByUserOneIdAndUserTwoId(request.getSenderId(), request.getReceiverId())
                 .orElseGet(() -> conversationRepository
@@ -72,6 +59,8 @@ public class MessageService {
                             newConv.setCreatedAt(LocalDateTime.now().toString());
                             return conversationRepository.save(newConv);
                         }));
+
+        Message message = new Message();
         message.setConversationId(conversation.getId());
         message.setSenderId(request.getSenderId());
         message.setReceiverId(request.getReceiverId());
@@ -80,10 +69,9 @@ public class MessageService {
         message.setRead(false);
 
         Message saved = messageRepository.save(message);
-
-
         return mapToResponse(saved);
     }
+
 
     public List<MessageResponse> getMessages(Long conversationId) {
         return messageRepository.findByConversationId(conversationId)
@@ -160,7 +148,7 @@ public class MessageService {
     }
 
     public MentorshipDTO getMentorshipFromMentorshipService(Long studentId, Long alumniId) {
-        String url = "http://MENTORSHIP-SERVICE/mentorship/between?studentId=" + studentId + "&alumniId=" + alumniId;
+        String url = "http://MENTORSHIP-SERVICE/mentorship/" + studentId + "/getMentorshipById/" + alumniId;
         return restTemplate.getForObject(url, MentorshipDTO.class);
     }
 }
