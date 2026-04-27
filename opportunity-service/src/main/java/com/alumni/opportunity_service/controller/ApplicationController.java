@@ -4,11 +4,14 @@ import com.alumni.opportunity_service.dto.ApplicationRequestDTO;
 import com.alumni.opportunity_service.dto.ApplicationResponseDTO;
 import com.alumni.opportunity_service.entity.Application;
 import com.alumni.opportunity_service.service.ApplicationService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/applications")
 public class ApplicationController {
@@ -20,21 +23,28 @@ public class ApplicationController {
     }
 
     @PostMapping("/apply")
-    public ApplicationResponseDTO apply(@RequestBody ApplicationRequestDTO request) {
+    public ApplicationResponseDTO apply(
+            @RequestBody ApplicationRequestDTO request,
+            HttpServletRequest httpRequest
+    ) {
 
         Application app = service.apply(
                 request.getStudentId(),
-                request.getOpportunityId()
+                request.getOpportunityId(),
+                httpRequest
         );
 
         return mapToDTO(app);
     }
 
     @PutMapping("/{id}/status")
-    public ApplicationResponseDTO updateStatus(@PathVariable Long id,
-                                               @RequestParam String status) {
+    public ApplicationResponseDTO updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status,
+            HttpServletRequest httpRequest
+    ) {
 
-        Application app = service.updateStatus(id, status);
+        Application app = service.updateStatus(id, status, httpRequest);
         return mapToDTO(app);
     }
 
@@ -56,21 +66,18 @@ public class ApplicationController {
                 .toList();
     }
 
-    // MAPPER
+
     private ApplicationResponseDTO mapToDTO(Application app) {
 
-        ApplicationResponseDTO dto = new ApplicationResponseDTO();
+    ApplicationResponseDTO dto = new ApplicationResponseDTO();
 
-        dto.setApplicationId(app.getApplicationId());
-        dto.setAppliedDate(app.getAppliedDate());
-        dto.setStatus(app.getStatus().name());
+    dto.setApplicationId(app.getApplicationId());
+    dto.setAppliedDate(app.getAppliedDate());
+    dto.setStatus(app.getStatus().name());
 
-        dto.setStudentId(app.getStudent().getId());
-        dto.setStudentName(app.getStudent().getName());
+    dto.setStudentId(app.getStudentId());
+    dto.setOpportunityId(app.getOpportunityId());
 
-        dto.setOpportunityId(app.getOpportunity().getOpportunityId());
-        dto.setOpportunityTitle(app.getOpportunity().getTitle());
-
-        return dto;
+    return dto;
     }
 }

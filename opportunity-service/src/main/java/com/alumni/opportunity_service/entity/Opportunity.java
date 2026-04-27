@@ -21,9 +21,9 @@ public class Opportunity {
     private LocalDateTime deadline;
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "alumni_id")
-    private User alumni;
+
+
+    private Long alumniId;
 
     @PrePersist
     public void prePersist() {

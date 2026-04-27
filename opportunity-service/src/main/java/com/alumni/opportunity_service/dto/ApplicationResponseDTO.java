@@ -13,8 +13,8 @@ public class ApplicationResponseDTO {
     private String status;
 
     private Long studentId;
-    private String studentName;
+
 
     private Long opportunityId;
-    private String opportunityTitle;
+
 }

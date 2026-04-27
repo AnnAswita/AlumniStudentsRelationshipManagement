@@ -124,6 +124,71 @@ public class ApiAggregatorController {
         return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
     }
 
+
+    @PostMapping("/opportunities")
+    public ResponseEntity<?> createOpportunity(@RequestBody Object dto,
+                                               HttpServletRequest incoming) {
+
+        HttpHeaders headers = new HttpHeaders();
+        copyAuth(incoming, headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> entity = new HttpEntity<>(dto, headers);
+
+        String url = "http://opportunity-service/api/opportunities";
+
+        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+    }
+
+    @GetMapping("/opportunities")
+    public ResponseEntity<?> getAllOpportunities(HttpServletRequest incoming) {
+
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://opportunity-service/api/opportunities";
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+
+    @GetMapping("/opportunities/{id}")
+    public ResponseEntity<?> getOpportunityById(@PathVariable Long id,
+                                               HttpServletRequest incoming) {
+
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://opportunity-service/api/opportunities/" + id;
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+
+    @PutMapping("/opportunities/{id}")
+    public ResponseEntity<?> updateOpportunity(@PathVariable Long id,
+                                              @RequestParam Long userId,
+                                              @RequestBody Object dto,
+                                              HttpServletRequest incoming) {
+
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Object> entity = new HttpEntity<>(dto, headers);
+
+        String url = "http://opportunity-service/api/opportunities/" + id + "?userId=" + userId;
+
+        return restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
+    }
+
+    @DeleteMapping("/opportunities/{id}")
+    public ResponseEntity<?> deleteOpportunity(@PathVariable Long id,
+                                              HttpServletRequest incoming) {
+
+        HttpHeaders headers = buildHeaders(incoming);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://opportunity-service/api/opportunities/" + id;
+
+        return restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
+    }
+
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id,
                                      HttpServletRequest incoming) {

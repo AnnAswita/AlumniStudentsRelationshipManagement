@@ -20,13 +20,10 @@ public class Application {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private User student;
+    private Long studentId; 
 
-    @ManyToOne
-    @JoinColumn(name = "opportunity_id")
-    private Opportunity opportunity;
+
+    private Long opportunityId;
 
     @PrePersist
     public void prePersist() {

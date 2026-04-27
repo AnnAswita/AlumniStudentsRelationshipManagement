@@ -10,6 +10,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     List<Application> findByStudentId(Long studentId);
 
-    List<Application> findByOpportunityOpportunityId(Long opportunityId);
+    List<Application> findByOpportunityId(Long opportunityId);
 }
 

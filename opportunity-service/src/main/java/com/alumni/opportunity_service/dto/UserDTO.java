@@ -1,11 +1,12 @@
 package com.alumni.opportunity_service.dto;
 
-import com.alumni.opportunity_service.enums.UserRole;
 
+import lombok.Data;
+
+@Data
 public class UserDTO {
-
     private Long id;
     private String name;
-    private UserRole role;
-
+    private String email;
+    private String role;
 }

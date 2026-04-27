@@ -4,11 +4,14 @@ import com.alumni.opportunity_service.dto.OpportunityRequestDTO;
 import com.alumni.opportunity_service.dto.OpportunityResponseDTO;
 import com.alumni.opportunity_service.entity.Opportunity;
 import com.alumni.opportunity_service.service.OpportunityService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/opportunities")
 public class OpportunityController {
@@ -19,8 +22,15 @@ public class OpportunityController {
         this.service = service;
     }
 
+
     @PostMapping
-    public OpportunityResponseDTO create(@RequestBody OpportunityRequestDTO request) {
+    public OpportunityResponseDTO create(
+            @RequestBody OpportunityRequestDTO request,
+            HttpServletRequest httpRequest
+    ) {
+
+        String token = httpRequest.getHeader("Authorization");
+        System.out.println("TOKEN = " + token);
 
         Opportunity opportunity = new Opportunity();
         opportunity.setTitle(request.getTitle());
@@ -46,10 +56,13 @@ public class OpportunityController {
         return mapToDTO(service.getById(id));
     }
 
-    @PutMapping("/{id}")
-    public OpportunityResponseDTO update(@PathVariable Long id,
-                                         @RequestParam Long userId,
-                                         @RequestBody OpportunityRequestDTO request) {
+   @PutMapping("/{id}")
+    public OpportunityResponseDTO update(
+            @PathVariable Long id,
+            @RequestBody OpportunityRequestDTO request
+    ) {
+        System.out.println("UPDATE HIT");
+        System.out.println("USER ID = " + request.getUserId());
 
         Opportunity updated = new Opportunity();
         updated.setTitle(request.getTitle());
@@ -57,7 +70,11 @@ public class OpportunityController {
         updated.setType(request.getType());
         updated.setDeadline(request.getDeadline());
 
-        Opportunity saved = service.update(id, userId, updated);
+        Opportunity saved = service.update(
+                id,
+                request.getUserId(),
+                updated
+        );
 
         return mapToDTO(saved);
     }
