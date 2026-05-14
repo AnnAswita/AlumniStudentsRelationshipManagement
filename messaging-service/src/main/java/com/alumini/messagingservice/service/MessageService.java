@@ -80,7 +80,7 @@ public class MessageService {
     public List<MessageResponse> getMessages(Long conversationId,Long userId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
-
+        //Added security for conversation.
         if (!conversation.getUserOneId().equals(userId)
                 && !conversation.getUserTwoId().equals(userId)) {
             throw new ResponseStatusException(
