@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/events";
+const BASE_URL = "http://localhost:8084/events";
 
 export async function getEvents() {
   const res = await fetch(BASE_URL);

@@ -1,0 +1,77 @@
+services:
+  eureka-server:
+    build: ./service-registry
+    ports:
+      - "8761:8761"
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+  mentorship-service:
+    build: ./mentorship-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+      - user-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+  messaging-service:
+    build: ./messaging-service
+    ports:
+      - "8087:8087"
+    depends_on:
+      - eureka-server
+      - user-service
+      - mentorship-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+  api-aggregator:
+    build: ./api-aggregator
+    ports:
+      - "8085:8085"
+    depends_on:
+      - eureka-server
+      - user-service
+      - mentorship-service
+      - messaging-service
+      - opportunity-service
+      - event-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+  opportunity-service:
+    build: ./opportunity-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
+      - user-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+  event-service:
+    build: ./event-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - eureka-server
+      - user-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-aggregator
+      - event-service
