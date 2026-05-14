@@ -234,14 +234,22 @@ public class ApiAggregatorController {
     }
 
     @GetMapping("/messages/{conversationId}")
-    public ResponseEntity<?> getMessagesByConversation(@PathVariable Long conversationId,
+    public ResponseEntity<?> getMessagesByConversation(@PathVariable Long conversationId,@RequestParam Long userId,
                                                        HttpServletRequest incoming) {
         HttpHeaders headers = buildHeaders(incoming);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://MESSAGING-SERVICE/messages/" + conversationId;
-
-        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        String url = "http://MESSAGING-SERVICE/messages/"
+                + conversationId
+                + "?userId="
+                + userId;
+        try {
+            return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        } catch (org.springframework.web.client.HttpClientErrorException ex) {
+            return ResponseEntity
+                    .status(ex.getStatusCode())
+                    .body(ex.getResponseBodyAsString());
+        }
     }
 
     @PostMapping("/messages")

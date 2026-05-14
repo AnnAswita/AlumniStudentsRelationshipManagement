@@ -66,7 +66,7 @@ export default function ChatPage() {
             const convId = conversation.conversationId || conversation.id;
             setConversationId(convId);
 
-            const history = await getConversationMessages(convId);
+            const history = await getConversationMessages(convId,senderId);
             setMessages(history);
 
             connectWebSocket();

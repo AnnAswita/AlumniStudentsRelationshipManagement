@@ -28,8 +28,8 @@ export async function startConversation(senderId, receiverId) {
     return res.json();
 }
 
-export async function getConversationMessages(conversationId) {
-    const res = await fetch(`${MESSAGE_BASE_URL}/${conversationId}`, {
+export async function getConversationMessages(conversationId,userId) {
+    const res = await fetch(`${MESSAGE_BASE_URL}/${conversationId}?userId=${userId}`, {
         headers: { ...authHeader() }
     });
 

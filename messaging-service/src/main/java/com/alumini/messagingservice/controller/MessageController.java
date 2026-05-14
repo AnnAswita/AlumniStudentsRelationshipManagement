@@ -28,8 +28,8 @@ public class MessageController {
     }
 
     @GetMapping("/{conversationId}")
-    public List<MessageResponse> getMessages(@PathVariable Long conversationId) {
-        return messageService.getMessages(conversationId);
+    public List<MessageResponse> getMessages(@PathVariable Long conversationId,@RequestParam Long userId) {
+        return messageService.getMessages(conversationId,userId);
     }
 
     @PutMapping("/read/{id}")

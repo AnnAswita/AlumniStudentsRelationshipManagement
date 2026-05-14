@@ -9,8 +9,11 @@ import com.alumini.messagingservice.entity.Conversation;
 import com.alumini.messagingservice.entity.Message;
 import com.alumini.messagingservice.repository.ConversationRepository;
 import com.alumini.messagingservice.repository.MessageRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +34,7 @@ public class MessageService {
         this.conversationRepository = conversationRepository;
     }
 
+    @CircuitBreaker(name = "mentorshipService", fallbackMethod = "sendMessageFallback")
     public MessageResponse sendMessage(MessageRequest request) {
 
         Long studentId = request.getStudentId();
@@ -73,7 +77,16 @@ public class MessageService {
     }
 
 
-    public List<MessageResponse> getMessages(Long conversationId) {
+    public List<MessageResponse> getMessages(Long conversationId,Long userId) {
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+
+        if (!conversation.getUserOneId().equals(userId)
+                && !conversation.getUserTwoId().equals(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Unauthorized access to conversation");
+        }
         return messageRepository.findByConversationId(conversationId)
                 .stream()
                 .map(this::mapToResponse)
@@ -147,8 +160,23 @@ public class MessageService {
         return mapToResponse(saved);
     }
 
+
     public MentorshipDTO getMentorshipFromMentorshipService(Long studentId, Long alumniId) {
         String url = "http://MENTORSHIP-SERVICE/mentorship/" + studentId + "/getMentorshipById/" + alumniId;
         return restTemplate.getForObject(url, MentorshipDTO.class);
+    }
+
+    public MessageResponse sendMessageFallback(MessageRequest request, Exception ex) {
+
+        System.out.println("Fallback triggered: Mentorship service unavailable. Message not sent.");
+
+        MessageResponse response = new MessageResponse();
+        response.setConversationId(request.getConversationId());
+        response.setSenderId(request.getSenderId());
+        response.setReceiverId(request.getReceiverId());
+        response.setContent("Message not sent: mentorship service is temporarily unavailable.");
+        response.setTimestamp(java.time.LocalDateTime.now().toString());
+        response.setRead(false);
+        throw new RuntimeException("Messaging temporarily unavailable because mentorship service is down");
     }
 }
